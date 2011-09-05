@@ -35,6 +35,10 @@ class MixiAgent < Mechanize
     year, month, day, hour, min = date_node.content.scan(/(\d{4})[^\d]*(\d{2})[^\d]*(\d{2})[^\d]*(\d{2}):(\d{2})/).flatten
     mixi_event.created_at = Time.local(year, month, day, hour, min)
 
+    hold_node = parser.css(".bbsList01 .bbsInfo dd").first
+    year, month, day = hold_node.content.scan(/(\d{4})[^\d]*(\d{2})[^\d]*(\d{2})/).flatten
+    mixi_event.schedule = Time.local(year, month, day)
+
     body_node = parser.css(".bbsList01 .bbsContent dd").first
     mixi_event.body = body_node.content
 
@@ -43,5 +47,5 @@ class MixiAgent < Mechanize
 end
 
 class MixiEvent
-  attr_accessor :title, :body, :link, :created_at, :event_id, :cid
+  attr_accessor :title, :body, :link, :created_at, :event_id, :cid, :schedule
 end

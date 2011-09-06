@@ -4,7 +4,21 @@ require "bundler/setup"
 require "mechanize"
 require "kconv"
 
+class MyParser
+  def self.parse(thing, url = nil, encoding = nil,
+    options = Nokogiri::XML::ParseOptions::DEFAULT_HTML, &block)
+#   EUC-JPからUTF-8へ変換を決め打ち。head/metaのContent-Typeのcharset文字列もsubで変換
+    thing=NKF.nkf("-wm0E",thing).sub(/euc-jp/,"utf-8")
+    Nokogiri::HTML::Document.parse(thing, url, encoding, options, &block)
+  end
+end
+
 class MixiAgent < Mechanize
+  def initialize
+    super
+    self.html_parser = MyParser
+  end
+
   def mixi_login(login, password)
     get "http://mixi.jp/home.pl"
     login_form = page.form_with(:name => "login_form")

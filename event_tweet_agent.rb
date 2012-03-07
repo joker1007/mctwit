@@ -28,7 +28,7 @@ class EventTweetAgent
         tweet_body += " - #{desc}"
       end
 
-      tweet_body += " http://mixi.jp/#{event.link}"
+      tweet_body += " http://mixi.jp/#{event.link} Posted: #{Time.now.strftime("%y/%m/%d")}"
 
       @client.update(tweet_body)
     end
